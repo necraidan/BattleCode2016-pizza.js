@@ -15,6 +15,9 @@
     "js"
   ],
   "author": "Benjamin Auzanneau",
+  "contributors": [
+    "Denis Souron", "Fabien Thomas", "Paul Bonnet"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/necraidan/BattleCode2016-pizza.js/issues"
