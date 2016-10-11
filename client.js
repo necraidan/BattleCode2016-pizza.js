@@ -1,4 +1,4 @@
-//         d8b                         
+//         d8b
 //         Y8P
 //
 // 88888b. 8888888888888888888 8888b.
@@ -10,7 +10,7 @@
 // 888
 // 888
 
-
+var toto;
 var request = require('request');
 
 var botNumber = 7;
