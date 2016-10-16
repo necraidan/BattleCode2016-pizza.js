@@ -1,5 +1,5 @@
 let request = require('request'),
-  config = require('./pizzaModules/pizzaConfig.js');
+  config = require('./pizzaConfig.js');
 
 module.exports.getIdEquipe = function () {
   request(config.battleUrl + 'player/getIdEquipe/' + login + '/' + mdp, function (error, response, body) {

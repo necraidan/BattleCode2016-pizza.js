@@ -1,4 +1,4 @@
-module.exports.config = {
+module.exports = {
   login: 'pizza.js',
   mdp: '',
   idEquipe: '',
