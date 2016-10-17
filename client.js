@@ -1,22 +1,9 @@
-//         d8b
-//         Y8P
-//
-// 88888b. 8888888888888888888 8888b.
-// 888 "88b888   d88P    d88P     "88b
-// 888  888888  d88P    d88P  .d888888
-// 888 d88P888 d88P    d88P   888  888
-// 88888P" 8888888888888888888"Y888888
-// 888
-// 888
-// 888
-
-var toto;
 var request = require('request');
 
-var botNumber = 7;
+var botNumber = 5;
 
 var login = 'pizza.js';
-var mdp = '';
+var mdp = 'PizzaTempo44300Nantes';
 var idEquipe = '';
 var idPartie = '';
 var lastMove = '';
@@ -64,13 +51,17 @@ function strat2(lastMoveIA) {
   if (firstShot) {
     firstShot = !firstShot;
     countBomb--;
-    move(moveState.bomb);
+    move(moveState.cover);
   }
-  /* else if(coup === 6) {
+  else if(coup === 6) {
       move(moveState.bomb);
-    } else if(coup === 8) {
+  } else if(coup === 8) {
       move(moveState.reload);
-    }*/
+  }else if(coup === 13 || coup === 15) {
+      move(moveState.shoot);
+  }else if(coup === 28) {
+      move(moveState.bomb);
+  }
   else if (coup === 3 || coup === 4) {
     move(moveState.reload);
   } else if (lastMoveIA === moveState.bomb && lastLapBomb && countCover > 0) {
@@ -170,7 +161,7 @@ function strat(lastMoveIA) {
 }
 
 function play() {
-  request('http://---/battle-ws/duel/game/status/' + idPartie + '/' + idEquipe, function (error, response, body) {
+  request('http://www.codeandplay.date/battle-ws/duel/game/status/' + idPartie + '/' + idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       if (gameState.canPlay === body) {
         getLastMove();
@@ -192,7 +183,7 @@ function play() {
 
 function move(moveAction) {
   lastMove = moveAction;
-  request('http://---/battle-ws/duel/game/play/' + idPartie + '/' + idEquipe + '/' + moveAction, function (error, response, body) {
+  request('http://www.codeandplay.date/battle-ws/duel/game/play/' + idPartie + '/' + idEquipe + '/' + moveAction, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       console.log(body);
       play();
@@ -201,18 +192,18 @@ function move(moveAction) {
 }
 
 function getLastMove() {
-  request('http://---//battle-ws/duel/game/getlastmove/' + idPartie + '/' + idEquipe, function (error, response, body) {
+  request('http://www.codeandplay.date/battle-ws/duel/game/getlastmove/' + idPartie + '/' + idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       strat2(body);
     }
   });
 }
 
-request('http://---/battle-ws/duel/player/getIdEquipe/' + login + '/' + mdp, function (error, response, body) {
+request('http://www.codeandplay.date/battle-ws/duel/player/getIdEquipe/' + login + '/' + mdp, function (error, response, body) {
   if (!error && response.statusCode == 200) {
     idEquipe = body;
 
-    request('http://---/battle-ws/duel/practice/new/' + botNumber + '/' + idEquipe, function (error, response, body) {
+    request('http://www.codeandplay.date/battle-ws/duel/practice/new/' + botNumber + '/' + idEquipe, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         idPartie = body;
         play();
