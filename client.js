@@ -17,12 +17,20 @@ let request = require('request'),
   config = require('./pizzaModules/pizzaConfig.js'),
   calls = require('./pizzaModules/pizzaCalls.js');
 
+function routine(){
+  console.log(config);
+}
 
+calls.getIdEquipe(routine);
+
+//calls.getIdEquipe(calls.getIdPartie(routine));
+
+/*
 console.log(request);
 console.log(states);
 console.log(config);
 console.log(calls);
-
+*/
 
 // 🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕
 

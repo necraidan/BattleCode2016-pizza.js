@@ -1,9 +1,9 @@
 module.exports = {
   login: 'pizza.js',
-  mdp: '',
+  mdp: 'PizzaTempo44300Nantes',
   idEquipe: '',
   idPartie: '',
-  battleUrl: 'http://---/battle-ws/duel/',
+  battleUrl: 'http://www.codeandplay.date/battle-ws/duel/',
   lastMove: null,
   botNumber: 1
 };

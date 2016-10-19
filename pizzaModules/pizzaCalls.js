@@ -1,16 +1,21 @@
 let request = require('request'),
   config = require('./pizzaConfig.js');
 
-module.exports.getIdEquipe = function () {
-  request(config.battleUrl + 'player/getIdEquipe/' + login + '/' + mdp, function (error, response, body) {
+module.exports.getIdEquipe = function (cbFn) {
+  console.log("Call getIdEquipe");
+  console.log(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp);
+  request(''+config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp, function (error, response, body) {
+    console.log(body);
     if (!error && response.statusCode == 200) {
       config.idEquipe = body;
+      console.log("Call callback");
+      cbFn();
     }
   });
 };
 
 module.exports.getLastMove = function (cbFn) {
-  request(config.battleUrl + 'game/getlastmove/' + idPartie + '/' + idEquipe, function (error, response, body) {
+  request(config.battleUrl + 'game/getlastmove/' + config.idPartie + '/' + config.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       cbFn(body);
     }
@@ -18,7 +23,7 @@ module.exports.getLastMove = function (cbFn) {
 };
 
 module.exports.gameStatus = function (cbFn) {
-  request(config.battleUrl + 'game/status/' + idPartie + '/' + idEquipe, function (error, response, body) {
+  request(config.battleUrl + 'game/status/' + config.idPartie + '/' + config.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       cbFn(body);
     }
@@ -26,8 +31,8 @@ module.exports.gameStatus = function (cbFn) {
 };
 
 module.exports.moveAction = function (cbFn, actionMove) {
-  config.lastMove = moveAction;
-  request(config.battleUrl + 'game/play/' + idPartie + '/' + idEquipe + '/' + moveAction, function (error, response, body) {
+  config.lastMove = actionMove;
+  request(config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       cbFn(body);
     }
@@ -35,9 +40,11 @@ module.exports.moveAction = function (cbFn, actionMove) {
 };
 
 module.exports.getIdPartie = function (cbFn) {
-  request(config.battleUrl + 'game/play/' + idPartie + '/' + idEquipe + '/' + moveAction, function (error, response, body) {
+  console.log("Call getIdPartie");
+  request(config.battleUrl + 'duel/practice/new/' + config.botNumber, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       config.idPartie = body;
+      console.log("Call callback");
       cbFn();
     }
   });
