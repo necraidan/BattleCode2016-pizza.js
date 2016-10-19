@@ -12,14 +12,18 @@
 
 // 🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕
 
-let request = require('request'),
+var request = require('request'),
   states = require('./pizzaModules/pizzaStates.js'),
   config = require('./pizzaModules/pizzaConfig.js'),
   calls = require('./pizzaModules/pizzaCalls.js');
 
 function routine(){
-  console.log(config);
+  
+  calls.getIdPartie(function(){
+  	console.log(config.idPartie);
+  });
 }
+
 
 calls.getIdEquipe(routine);
 

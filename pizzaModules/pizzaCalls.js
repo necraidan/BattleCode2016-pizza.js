@@ -1,10 +1,11 @@
-let request = require('request'),
-  config = require('./pizzaConfig.js');
+var request = require('request');
+  var config = require('./pizzaConfig.js');
 
 module.exports.getIdEquipe = function (cbFn) {
   console.log("Call getIdEquipe");
-  console.log(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp);
-  request(''+config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp, function (error, response, body) {
+  var url = config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp;
+  console.log(url);
+  request(url, function (error, response, body) {
     console.log(body);
     if (!error && response.statusCode == 200) {
       config.idEquipe = body;
@@ -40,11 +41,9 @@ module.exports.moveAction = function (cbFn, actionMove) {
 };
 
 module.exports.getIdPartie = function (cbFn) {
-  console.log("Call getIdPartie");
-  request(config.battleUrl + 'duel/practice/new/' + config.botNumber, function (error, response, body) {
+  request(config.battleUrl + 'practice/new/' + config.botNumber + '/' + config.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       config.idPartie = body;
-      console.log("Call callback");
       cbFn();
     }
   });
