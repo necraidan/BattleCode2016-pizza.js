@@ -1,5 +1,5 @@
-var request = require('request');
-  var config = require('./pizzaConfig.js');
+let request = require('request'),
+  config = require('./pizzaConfig.js');
 
 module.exports.getIdEquipe = function (cbFn) {
   console.log("Call getIdEquipe");

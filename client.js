@@ -12,7 +12,7 @@
 
 // 🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕🍕
 
-var request = require('request'),
+let request = require('request'),
   states = require('./pizzaModules/pizzaStates.js'),
   config = require('./pizzaModules/pizzaConfig.js'),
   calls = require('./pizzaModules/pizzaCalls.js');
