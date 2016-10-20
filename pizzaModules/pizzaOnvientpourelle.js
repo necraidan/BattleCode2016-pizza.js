@@ -25,6 +25,8 @@ module.exports.strat1 = function () {
     });*/
       var fightersId = [];
       var target = '';
+      var secondaryTarget = undefined;
+      var targetLife = 0;
       var move ='';
       
       var lastBoard = JSON.parse(battleParams.lastBoard);
@@ -32,22 +34,33 @@ module.exports.strat1 = function () {
           if(player.playerName === 'pizza.js') {
               player.fighters.forEach(function(fighter, index){
                   if(fighter.currentLife>0){
-                      fightersId.push('A' + (index+1));
+                      fightersId.push(index);
                   }
               });
           } else {
               var maxHp = 31;
               player.fighters.forEach(function(fighter, index){
                   if(fighter.currentLife>0 && fighter.currentLife<maxHp){
-                      target = 'E' + (index + 1);
+                      target = index;
                       maxHp = fighter.currentLife;
+                      targetLife = fighter.currentLife;
+                  } else if(fighter.currentLife>0){
+                      secondaryTarget = index;
                   }
               });
           }
       });
       
       fightersId.forEach(function(fighter){
-          move += fighter + ',ATTACK,'+target +'$';
+          
+          if(targetLife>0 || !secondaryTarget){
+              move += 'A' + (fighter+1) + ',ATTACK,E'+ (target+1) +'$';
+          } else {
+              move += 'A' + (fighter+1) + ',ATTACK,E'+ (secondaryTarget+1) +'$';
+          }
+          
+          
+          targetLife -= 2;
           
       });
       
