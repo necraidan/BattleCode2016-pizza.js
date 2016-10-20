@@ -50,3 +50,5 @@ module.exports.players = {
     specialMove: module.exports.moveState.heal
   }
 };
+
+module.exports.turn = 0;
