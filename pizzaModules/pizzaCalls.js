@@ -35,9 +35,6 @@ module.exports.moveAction = function (cbFn, actionMove) {
   config.lastMove = actionMove;
   request(config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
-      console.log(cbFn);
-      console.log(actionMove);
       cbFn(body);
     }
   });
