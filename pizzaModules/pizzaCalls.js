@@ -79,9 +79,36 @@ module.exports.gameLoop = function (statusCode) {
     }, 200);
   } else if (states.gameState.victory === statusCode) {
     console.log(states.gameState.victory + '!');
+    if (config.battleModeVersus) {
+      replayAnotherGame();
+    }
   } else if (states.gameState.defeat === statusCode) {
     console.log(states.gameState.defeat + '!');
+    if (config.battleModeVersus) {
+      replayAnotherGame();
+    }
   } else if (states.gameState.cancelled === statusCode) {
     console.log(states.gameState.cancelled + '!');
+    if (config.battleModeVersus) {
+      battleParams = clone(defaultBattleParams);
+      replayAnotherGame();
+    }
   }
+}
+
+function replayAnotherGame() {
+  calls.getIdPartieBattle(() => calls.gameStatus());
+}
+
+function clone(obj) {
+  if (null == obj || "object" != typeof obj) return obj;
+  var copy = obj.constructor();
+  for (var attr in obj) {
+    if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+  }
+  return copy;
+}
+
+defaultBattleParams = {
+
 }
