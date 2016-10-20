@@ -17,15 +17,109 @@ let request = require('request'),
   config = require('./pizzaModules/pizzaConfig.js'),
   calls = require('./pizzaModules/pizzaCalls.js');
 
-function routine(){
-  
-  calls.getIdPartie(function(){
-  	console.log(config.idPartie);
-  });
+
+var lastLapBomb = '';
+
+var countCover = 7;
+var countCoverIA = 7;
+var countBullet = 1;
+var countBulletIA = 1;
+var countBomb = 1;
+
+var coup = 0;
+
+var countCoverInARow = 0;
+
+var toggleAim = false;
+
+
+
+var firstShot = true;
+
+function routine(statusCode) {
+  if (states.gameState.canPlay === statusCode) {
+    calls.getLastMove(strat);
+  } else if (states.gameState.cantPlay === statusCode) {
+    setTimeout(function () {
+      calls.gameStatus(routine);
+    }, 100);
+  } else if (states.gameState.victory === statusCode) {
+    console.log(states.gameState.victory + '!');
+  } else if (states.gameState.defeat === statusCode) {
+    console.log(states.gameState.defeat + '!');
+    console.log('countBullet: ' + countBullet);
+    console.log('countCover: ' + countCover);
+    console.log('countBomb: ' + countBomb);
+  } else if (states.gameState.cancelled === statusCode) {
+    console.log(states.gameState.cancelled + '!');
+  }
+}
+
+function callRoutine() {
+  calls.gameStatus(routine);
+}
+
+function strat(lastMoveIA) {
+  coup++;
+  console.log('Coup numero: ' + coup);
+  if (lastMoveIA === states.moveState.cover) {
+    countCoverIA--;
+  } else if (lastMoveIA === states.moveState.bomb) {
+    lastLapBomb = true;
+  }
+
+  if (firstShot) {
+    firstShot = !firstShot;
+    countBomb--;
+    calls.moveAction(callRoutine, states.moveState.bomb);
+  }
+  /* else if(coup === 6) {
+      calls.moveAction(states.moveState.bomb);
+    } else if(coup === 8) {
+      calls.moveAction(states.moveState.reload);
+    }*/
+  else if (coup === 3 || coup === 4) {
+    calls.moveAction(callRoutine, states.moveState.reload);
+  } else if (lastMoveIA === states.moveState.bomb && lastLapBomb && countCover > 0) {
+    countCover--;
+    calls.moveAction(callRoutine, states.moveState.cover);
+  } else if (lastLapBomb && countCover > 0) {
+    countCover--;
+    lastLapBomb = !lastLapBomb;
+    calls.moveAction(callRoutine, states.moveState.cover);
+  } else if (lastMoveIA === states.moveState.shoot && countBomb > 0) {
+    countBomb--;
+    calls.moveAction(callRoutine, states.moveState.bomb);
+  } else if (lastMoveIA === states.moveState.aim && countCover > 0) {
+    countCover--;
+    calls.moveAction(callRoutine, states.moveState.cover);
+  } else if (config.lastMove === states.moveState.bomb && countBullet < 3) {
+    countBullet++;
+    calls.moveAction(callRoutine, states.moveState.reload);
+  } else if (config.lastMove === states.moveState.reload) {
+    calls.moveAction(callRoutine, states.moveState.aim);
+  } else if (config.lastMove === states.moveState.aim) {
+    countBullet--;
+    calls.moveAction(callRoutine, states.moveState.shoot);
+  } else {
+    if (countBullet > 0) {
+      countBullet--;
+      calls.moveAction(callRoutine, states.moveState.shoot);
+    } else {
+      countBullet++;
+      calls.moveAction(callRoutine, states.moveState.reload);
+    }
+  }
+
+  console.log('countBullet: ' + countBullet);
+  console.log('countCover: ' + countCover);
+  console.log('countBomb: ' + countBomb);
+
 }
 
 
-calls.getIdEquipe(routine);
+calls.getIdEquipe(() => calls.getIdPartie(() => calls.gameStatus(routine)));
+
 
 //calls.getIdEquipe(calls.getIdPartie(routine));
 
@@ -66,52 +160,52 @@ console.log(calls);
 // function strat2(lastMoveIA) {
 //   coup++;
 //   console.log('Coup numero: ' + coup);
-//   if (lastMoveIA === moveState.cover) {
+//   if (lastMoveIA === states.moveState.cover) {
 //     countCoverIA--;
-//   } else if (lastMoveIA === moveState.bomb) {
+//   } else if (lastMoveIA === states.moveState.bomb) {
 //     lastLapBomb = true;
 //   }
 //
 //   if (firstShot) {
 //     firstShot = !firstShot;
 //     countBomb--;
-//     move(moveState.bomb);
+//     calls.moveAction(states.moveState.bomb);
 //   }
 //   /* else if(coup === 6) {
-//       move(moveState.bomb);
+//       calls.moveAction(states.moveState.bomb);
 //     } else if(coup === 8) {
-//       move(moveState.reload);
+//       calls.moveAction(states.moveState.reload);
 //     }*/
 //   else if (coup === 3 || coup === 4) {
-//     move(moveState.reload);
-//   } else if (lastMoveIA === moveState.bomb && lastLapBomb && countCover > 0) {
+//     calls.moveAction(states.moveState.reload);
+//   } else if (lastMoveIA === states.moveState.bomb && lastLapBomb && countCover > 0) {
 //     countCover--;
-//     move(moveState.cover);
+//     calls.moveAction(states.moveState.cover);
 //   } else if (lastLapBomb && countCover > 0) {
 //     countCover--;
 //     lastLapBomb = !lastLapBomb;
-//     move(moveState.cover);
-//   } else if (lastMoveIA === moveState.shoot && countBomb > 0) {
+//     calls.moveAction(states.moveState.cover);
+//   } else if (lastMoveIA === states.moveState.shoot && countBomb > 0) {
 //     countBomb--;
-//     move(moveState.bomb);
-//   } else if (lastMoveIA === moveState.aim && countCover > 0) {
+//     calls.moveAction(states.moveState.bomb);
+//   } else if (lastMoveIA === states.moveState.aim && countCover > 0) {
 //     countCover--;
-//     move(moveState.cover);
-//   } else if (lastMove === moveState.bomb && countBullet < 3) {
+//     calls.moveAction(states.moveState.cover);
+//   } else if (config.lastMove === states.moveState.bomb && countBullet < 3) {
 //     countBullet++;
-//     move(moveState.reload);
-//   } else if (lastMove === moveState.reload) {
-//     move(moveState.aim);
-//   } else if (lastMove === moveState.aim) {
+//     calls.moveAction(states.moveState.reload);
+//   } else if (config.lastMove === states.moveState.reload) {
+//     calls.moveAction(states.moveState.aim);
+//   } else if (config.lastMove === states.moveState.aim) {
 //     countBullet--;
-//     move(moveState.shoot);
+//     calls.moveAction(states.moveState.shoot);
 //   } else {
 //     if (countBullet > 0) {
 //       countBullet--;
-//       move(moveState.shoot);
+//       calls.moveAction(states.moveState.shoot);
 //     } else {
 //       countBullet++;
-//       move(moveState.reload);
+//       calls.moveAction(states.moveState.reload);
 //     }
 //   }
 //
@@ -123,59 +217,59 @@ console.log(calls);
 // function strat(lastMoveIA) {
 //   console.log(countCover);
 //   if (lastLapBomb) {
-//     lastMove = moveState.cover;
+//     config.lastMove = states.moveState.cover;
 //     countCover--;
 //     lastLapBomb = false;
-//     move(lastMove);
-//   } else if (lastMoveIA === moveState.aim) {
+//     calls.moveAction(config.lastMove);
+//   } else if (lastMoveIA === states.moveState.aim) {
 //     if (countCover && countCoverInARow < 2) {
-//       if (lastMove === moveState.cover) {
+//       if (config.lastMove === states.moveState.cover) {
 //         countCoverInARow++;
 //       }
-//       lastMove = moveState.cover;
+//       config.lastMove = states.moveState.cover;
 //       countCover--;
 //     } else {
 //       if (countBullet < 6) {
-//         lastMove = moveState.shoot;
+//         config.lastMove = states.moveState.shoot;
 //         countBullet--;
 //       } else {
-//         lastMove = moveState.reload;
+//         config.lastMove = states.moveState.reload;
 //         countBullet++;
 //       }
 //       countCoverInARow = 0;
 //     }
-//     move(lastMove);
-//   } else if (lastMoveIA === moveState.shoot && countBomb !== 0) {
-//     lastMove = moveState.bomb;
+//     calls.moveAction(config.lastMove);
+//   } else if (lastMoveIA === states.moveState.shoot && countBomb !== 0) {
+//     config.lastMove = states.moveState.bomb;
 //     countBomb--;
-//     move(lastMove);
+//     calls.moveAction(config.lastMove);
 //     console.log('launch bomb ' + countBomb);
-//   } else if (lastMoveIA === moveState.bomb) {
+//   } else if (lastMoveIA === states.moveState.bomb) {
 //     lastLapBomb = true;
 //     if (countBullet < 6) {
-//       lastMove = moveState.shoot;
+//       config.lastMove = states.moveState.shoot;
 //       countBullet--;
 //     } else {
-//       lastMove = moveState.reload;
+//       config.lastMove = states.moveState.reload;
 //       countBullet++;
 //     }
-//     move(lastMove);
-//   } else if (!lastMove) {
-//     lastMove = moveState.shoot;
+//     calls.moveAction(config.lastMove);
+//   } else if (!config.lastMove) {
+//     config.lastMove = states.moveState.shoot;
 //     countCover--;
-//     move(lastMove);
+//     calls.moveAction(config.lastMove);
 //   } else {
 //     if (countBullet < 6) {
-//       if (lastMove == moveState.aim) {
-//         lastMove = moveState.shoot;
+//       if (config.lastMove == states.moveState.aim) {
+//         config.lastMove = states.moveState.shoot;
 //       } else {
-//         lastMove = moveState.aim;
+//         config.lastMove = states.moveState.aim;
 //       }
 //       countBullet--;
 //     } else {
-//       lastMove = moveState.reload;
+//       config.lastMove = states.moveState.reload;
 //       countBullet++;
 //     }
-//     move(lastMove);
+//     calls.moveAction(config.lastMove);
 //   }
 // }
