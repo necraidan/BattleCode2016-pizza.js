@@ -1,6 +1,6 @@
 module.exports = {
   login: 'pizza.js',
-  mdp: '',
+  mdp: '?Marguar1taOrCalzon3!',
   idEquipe: '',
   idPartie: '',
   battleUrl: 'http://www.---.date/battle-ws/duel/',
