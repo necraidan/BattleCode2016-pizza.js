@@ -9,14 +9,16 @@ function callRoutine() {
 
 module.exports.strat1 = function () {
   console.log('Turn ' + battleParams.coup);
-  if (battleParams.coup === 1) {
-    calls.moveAction(states.orc.name);
+  console.log('Board ' + battleParams.lastBoard);
+  if (battleParams.coup === 0) {
+    calls.moveAction(states.players.orc.name);
+  } else if (battleParams.coup === 1) {
+    calls.moveAction(states.players.chaman.name);
   } else if (battleParams.coup === 2) {
-    calls.moveAction(states.chaman.name);
-  } else if (battleParams.coup === 3) {
-    calls.moveAction(states.paladin.name)
+    calls.moveAction(states.players.paladin.name)
   } else {
-    calls.moveAction('A1,ATTACK,E1$A2,ATTACK,E1$A3,ATTACK,E1');
+    //calls.moveAction('A1,ATTACK,E1$A2,ATTACK,E1$A3,ATTACK,E1');
+    console.log(battleParams.lastBoard);
   }
   battleParams.coup++;
 }

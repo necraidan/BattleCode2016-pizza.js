@@ -34,11 +34,13 @@ module.exports.gameStatus = function () {
 
 module.exports.moveAction = function (actionMove) {
   config.lastMove = actionMove;
-  request(config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove, function (error, response, body) {
+  let url = config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove;
+  console.log(url);
+  request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       //cbFn(body);
       console.log('Callback moveaction ' + body);
-      module.exports.gameStatus(module.exports.gameLoop);
+      module.exports.gameStatus();
     }
   });
 };
@@ -64,7 +66,7 @@ module.exports.getIdPartieBattle = function (cbFn) {
 module.exports.getBoard = function (cbFn) {
   request(config.battleUrl + 'game/board/' + config.idPartie, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      config.lastBoard = body;
+      battleParams.lastBoard = body;
       cbFn();
     }
   });
@@ -77,7 +79,7 @@ module.exports.gameLoop = function (statusCode) {
     module.exports.getBoard(engine.strat1);
   } else if (states.gameState.cantPlay === statusCode) {
     setTimeout(function () {
-      module.exports.gameStatus(module.exports.gameLoop);
+      module.exports.gameStatus();
     }, 200);
   } else if (states.gameState.victory === statusCode) {
     console.log(states.gameState.victory + '!');
