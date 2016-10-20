@@ -17,6 +17,8 @@ let request = require('request'),
   config = require('./pizzaModules/pizzaConfig.js'),
   calls = require('./pizzaModules/pizzaCalls.js');
 
+let battleMode = false;
+
 
 var lastLapBomb = '';
 
@@ -117,8 +119,12 @@ function strat(lastMoveIA) {
 
 }
 
+if (battleMode) {
+  calls.getIdEquipe(() => calls.getIdPartieBattle(() => calls.gameStatus(routine)));
+} else {
+  calls.getIdEquipe(() => calls.getIdPartie(() => calls.gameStatus(routine)));
+}
 
-calls.getIdEquipe(() => calls.getIdPartie(() => calls.gameStatus(routine)));
 
 
 //calls.getIdEquipe(calls.getIdPartie(routine));

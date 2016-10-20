@@ -52,6 +52,17 @@ module.exports.getIdPartie = function (cbFn) {
   });
 };
 
+module.exports.getIdPartieBattle = function (cbFn) {
+  request(config.battleUrl + 'versus/next/' + config.idEquipe, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      config.idPartie = body;
+      cbFn();
+    }
+  });
+};
+
+
+
 // function play() {
 //   request('http://---/battle-ws/duel/game/status/' + idPartie + '/' + idEquipe, function (error, response, body) {
 //     if (!error && response.statusCode == 200) {
