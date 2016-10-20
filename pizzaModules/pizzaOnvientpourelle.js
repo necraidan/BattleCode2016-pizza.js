@@ -61,8 +61,4 @@ module.exports.strat1 = function () {
     }
   }
 
-  console.log('battleParams.countBullet: ' + battleParams.countBullet);
-  console.log('battleParams.countCover: ' + battleParams.countCover);
-  console.log('battleParams.countBomb: ' + battleParams.countBomb);
-
 }

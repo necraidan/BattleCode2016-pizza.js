@@ -5,9 +5,11 @@ let request = require('request'),
   engine = require('./pizzaOnvientpourelle.js');
 
 module.exports.getIdEquipe = function (cbFn) {
+  console.log(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp);
   request(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       config.idEquipe = body;
+      console.log(body);
       cbFn();
     }
   });
@@ -65,7 +67,7 @@ module.exports.gameLoop = function (statusCode) {
   } else if (states.gameState.cantPlay === statusCode) {
     setTimeout(function () {
       module.exports.gameStatus(module.exports.gameLoop);
-    }, 100);
+    }, 200);
   } else if (states.gameState.victory === statusCode) {
     console.log(states.gameState.victory + '!');
   } else if (states.gameState.defeat === statusCode) {
