@@ -4,6 +4,6 @@ module.exports = {
   idEquipe: '',
   idPartie: '',
   battleUrl: 'http://www.codeandplay.date/battle-ws/duel/',
-  lastMove: null,
-  botNumber: 2
+  battleMode: false,
+  botNumber: 1
 };
