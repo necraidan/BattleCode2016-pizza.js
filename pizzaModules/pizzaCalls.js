@@ -110,5 +110,6 @@ function clone(obj) {
 }
 
 defaultBattleParams = {
-
-}
+  coup: 0,
+  lastBoard: null
+};
