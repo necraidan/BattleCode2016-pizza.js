@@ -24,6 +24,7 @@ module.exports.strat1 = function () {
         }
     });*/
       var fightersId = [];
+      var defenserId = [];
       var target = '';
       var secondaryTarget = undefined;
       var targetLife = 0;
@@ -33,7 +34,9 @@ module.exports.strat1 = function () {
       lastBoard.playerBoards.forEach(function(player){
           if(player.playerName === 'pizza.js') {
               player.fighters.forEach(function(fighter, index){
-                  if(fighter.currentLife>0){
+                  if(fighter.currentLife >0 && fighter.currentLife  <= 2) {
+                      defenserId.push(index);
+                  } else if(fighter.currentLife>0){
                       fightersId.push(index);
                   }
               });
@@ -62,6 +65,10 @@ module.exports.strat1 = function () {
           
           targetLife -= 2;
           
+      });
+      
+      defenserId.forEach(function(fighter) {
+          move += 'A' + (fighter+1) + ',DEFEND,A'+ (fighter+1) +'$';
       });
       
       console.log(move);
