@@ -32,11 +32,13 @@ module.exports.gameStatus = function () {
   });
 };
 
-module.exports.moveAction = function (cbFn, actionMove) {
+module.exports.moveAction = function (actionMove) {
   config.lastMove = actionMove;
   request(config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      cbFn(body);
+      //cbFn(body);
+      console.log('Callback moveaction ' + body);
+      module.exports.gameStatus(module.exports.gameLoop);
     }
   });
 };

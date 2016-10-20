@@ -8,14 +8,15 @@ function callRoutine() {
 }
 
 module.exports.strat1 = function () {
-    if (battleParams.coup === 1) {
-        calls.moveAction(states.orc.name);
-    } else if (battleParams.coup === 2) {
-        calls.moveAction(states.chaman.name);
-    } else if (battleParams.coup === 3) {
-        calls.moveAction(states.paladin.name)
-    } else {
-        calls.moveAction('A1,ATTACK,E1$A2,ATTACK,E1$A3,ATTACK,E1');
-    }
-    battleParams.coup++;
+  console.log('Turn ' + battleParams.coup);
+  if (battleParams.coup === 1) {
+    calls.moveAction(states.orc.name);
+  } else if (battleParams.coup === 2) {
+    calls.moveAction(states.chaman.name);
+  } else if (battleParams.coup === 3) {
+    calls.moveAction(states.paladin.name)
+  } else {
+    calls.moveAction('A1,ATTACK,E1$A2,ATTACK,E1$A3,ATTACK,E1');
+  }
+  battleParams.coup++;
 }
