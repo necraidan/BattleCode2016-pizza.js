@@ -1,6 +1,7 @@
 module.exports = {
   lastMoveIA: null,
   coup: 0,
+  lastBoard: null,
   lastLapBomb: '',
   countCover: 7,
   countCoverIA: 7,

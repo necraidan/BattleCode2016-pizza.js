@@ -59,11 +59,20 @@ module.exports.getIdPartieBattle = function (cbFn) {
   });
 };
 
+module.exports.getBoard = function (cbFn) {
+  request(config.battleUrl + 'game/board/' + config.idPartie, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      config.lastBoard = body;
+      cbFn();
+    }
+  });
+};
+
 
 //Si jamais on relance une partie, il faut réinit les battleParams
 module.exports.gameLoop = function (statusCode) {
   if (states.gameState.canPlay === statusCode) {
-    module.exports.getLastMove(engine.strat1);
+    module.exports.getBoard(engine.strat1);
   } else if (states.gameState.cantPlay === statusCode) {
     setTimeout(function () {
       module.exports.gameStatus(module.exports.gameLoop);
