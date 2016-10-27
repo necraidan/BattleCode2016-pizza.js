@@ -1,31 +1,35 @@
 let request = require('request'),
   config = require('./pizzaConfig.js'),
-  battleParams = require('./pizzaParams.js'),
   states = require('./pizzaStates.js'),
   engine = require('./pizzaOnvientpourelle.js');
 
+
+// Récupère l'identifiant de l'équipe
 module.exports.getIdEquipe = function (cbFn) {
-  console.log(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp);
-  request(config.battleUrl + 'player/getIdEquipe/' + config.login + '/' + config.mdp, function (error, response, body) {
+  console.log(config.settings.battleUrl + 'player/getIdEquipe/' + config.settings.login + '/' + config.settings.mdp);
+  request(config.settings.battleUrl + 'player/getIdEquipe/' + config.settings.login + '/' + config.settings.mdp, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      config.idEquipe = body;
+      config.settings.idEquipe = body;
       console.log(body);
       cbFn();
     }
   });
 };
 
+
+// Récupère le dernier mouvement de l'adversaire (non utilisé actuellement)
 module.exports.getLastMove = function (cbFn) {
-  request(config.battleUrl + 'game/getlastmove/' + config.idPartie + '/' + config.idEquipe, function (error, response, body) {
+  request(config.settings.battleUrl + 'game/getlastmove/' + config.settings.idPartie + '/' + config.settings.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      battleParams.lastMoveIA = body;
+      config.settings.lastMoveIA = body;
       cbFn();
     }
   });
 };
 
+// Récupère le statut de la partie
 module.exports.gameStatus = function () {
-  request(config.battleUrl + 'game/status/' + config.idPartie + '/' + config.idEquipe, function (error, response, body) {
+  request(config.settings.battleUrl + 'game/status/' + config.settings.idPartie + '/' + config.settings.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       module.exports.gameLoop(body);
     }
@@ -33,8 +37,8 @@ module.exports.gameStatus = function () {
 };
 
 module.exports.moveAction = function (actionMove) {
-  config.lastMove = actionMove;
-  let url = config.battleUrl + 'game/play/' + config.idPartie + '/' + config.idEquipe + '/' + actionMove;
+  config.settings.lastMove = actionMove;
+  let url = config.settings.battleUrl + 'game/play/' + config.settings.idPartie + '/' + config.settings.idEquipe + '/' + actionMove;
   console.log(url);
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -45,35 +49,38 @@ module.exports.moveAction = function (actionMove) {
   });
 };
 
+// Récupère l'identifiant de la partie : lance un entraînement contre les bots
 module.exports.getIdPartie = function (cbFn) {
-  request(config.battleUrl + 'practice/new/' + config.botNumber + '/' + config.idEquipe, function (error, response, body) {
+  request(config.settings.battleUrl + 'practice/new/' + config.settings.botNumber + '/' + config.settings.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      config.idPartie = body;
+      config.settings.idPartie = body;
       cbFn();
     }
   });
 };
 
+// Récupère l'identifiant de la partie : lance un match PvP
 module.exports.getIdPartieBattle = function (cbFn) {
-  request(config.battleUrl + 'versus/next/' + config.idEquipe, function (error, response, body) {
+  request(config.settings.battleUrl + 'versus/next/' + config.settings.idEquipe, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      config.idPartie = body;
+      config.settings.idPartie = body;
       cbFn();
     }
   });
 };
 
+// Récupère le plateau de jeu
 module.exports.getBoard = function (cbFn) {
-  request(config.battleUrl + 'game/board/' + config.idPartie, function (error, response, body) {
+  request(config.settings.battleUrl + 'game/board/' + config.settings.idPartie, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      battleParams.lastBoard = body;
+      config.params.lastBoard = body;
       cbFn();
     }
   });
 };
 
 
-//Si jamais on relance une partie, il faut réinit les battleParams
+//Si jamais on relance une partie, il faut réinit la config de la partie (config.params)
 module.exports.gameLoop = function (statusCode) {
   if (states.gameState.canPlay === statusCode) {
     module.exports.getBoard(engine.strat1);
@@ -83,23 +90,24 @@ module.exports.gameLoop = function (statusCode) {
     }, 200);
   } else if (states.gameState.victory === statusCode) {
     console.log(states.gameState.victory + '!');
-    if (config.battleModeVersus) {
+    if (config.settings.battleModeVersus) {
       replayAnotherGame();
     }
   } else if (states.gameState.defeat === statusCode) {
     console.log(states.gameState.defeat + '!');
-    if (config.battleModeVersus) {
+    if (config.settings.battleModeVersus) {
       replayAnotherGame();
     }
   } else if (states.gameState.cancelled === statusCode) {
     console.log(states.gameState.cancelled + '!');
-    if (config.battleModeVersus) {
-      battleParams = clone(defaultBattleParams);
+    if (config.settings.battleModeVersus) {
+      config.params = clone(config.defaultBattleParams);
       replayAnotherGame();
     }
   }
 }
 
+// Relance la partie
 function replayAnotherGame() {
   calls.getIdPartieBattle(() => calls.gameStatus());
 }
@@ -112,8 +120,3 @@ function clone(obj) {
   }
   return copy;
 }
-
-defaultBattleParams = {
-  coup: 0,
-  lastBoard: null
-};

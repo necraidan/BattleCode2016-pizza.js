@@ -15,9 +15,11 @@
 let calls = require('./pizzaModules/pizzaCalls.js'),
   config = require('./pizzaModules/pizzaConfig.js');
 
-if (config.battleMode) {
+if (config.settings.battleMode) {
+  // Match PvP
   calls.getIdEquipe(() => calls.getIdPartieBattle(() => calls.gameStatus()));
 } else {
+  // Entraînement
   calls.getIdEquipe(() => calls.getIdPartie(() => calls.gameStatus()));
 }
 
