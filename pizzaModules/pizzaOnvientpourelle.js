@@ -34,7 +34,7 @@ module.exports.strat1 = function () {
       lastBoard.playerBoards.forEach(function(player){
           if(player.playerName === 'pizza.js') {
               player.fighters.forEach(function(fighter, index){
-                  if(fighter.currentLife >0 && fighter.currentLife  <= 2) {
+                  if(fighter.currentLife >0 && fighter.currentLife  <= 4) {
                       defenserId.push(index);
                   } else if(fighter.currentLife>0){
                       fightersId.push(index);

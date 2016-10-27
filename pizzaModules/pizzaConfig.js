@@ -4,6 +4,6 @@ module.exports = {
   idEquipe: '',
   idPartie: '',
   battleUrl: 'http://evenement.codeandplay.date/epic-ws/epic/',
-  battleMode: false,
+  battleMode: true,
   botNumber: 10
 };
